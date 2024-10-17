@@ -2,6 +2,9 @@ import pygame
 import numpy as np
 
 class Cube:
+
+    COLOR = (255,0,255)
+
     def __init__(self):
         self.vertices = [
             [-1, -1, -1], [-1, -1,  1], [-1,  1, -1], [-1,  1,  1],
@@ -26,3 +29,14 @@ def project_vertex(vertex, screen_width, screen_height, fov, near, far):
 def draw_triangle(screen, v1, v2, v3, color, zbuffer):
     """ Draw a triangle on the screen. Update the Z-buffer. """
     pygame.draw.polygon(screen, color, [v1, v2, v3])
+
+def apply_view_transform(vertex, view_matrix):
+    """ Transform the vertex by the view matrix (camera position). """
+    # Convert vertex to homogeneous coordinates (x, y, z, 1)
+    homogeneous_vertex = np.array([*vertex, 1.0])
+    
+    # Apply the view matrix
+    transformed_vertex = np.dot(view_matrix, homogeneous_vertex)
+    
+    # Convert back to 3D (x, y, z)
+    return transformed_vertex[:3]
